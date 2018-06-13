@@ -1,0 +1,13 @@
+body{
+    background-image: url(./guygif.gif);
+}
+
+h1{
+    color: white;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+#lyrics{
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    color: white;
+}
