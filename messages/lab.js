@@ -11,11 +11,8 @@ function parse() {
     //set up response
     request.onreadystatechange = function() {
 
-        console.log(request.readyState);
-        console.log(request.status);
         if (request.readyState == 4 && request.status == 200) {
 
-            console.log("parsing request data");
             messagesDiv = document.getElementById("messages");
 
             theString = request.responseText;
