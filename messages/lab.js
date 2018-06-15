@@ -1,15 +1,21 @@
 // Your JavaScript goes here...
 
-function loadMessages() {
+function parse() {
     //create request instance
+    console.log("setting up XML request");
     request = new XMLHttpRequest();
 
     //set up HTTP REQUEST
-    request.open("GET", "./data.json", true);
+    request.open("GET", "data.json", true);
 
     //set up response
     request.onreadystatechange = function() {
-        if (request.readystate == 4 && request.status == 200) {
+
+        console.log(request.readyState);
+        console.log(request.status);
+        if (request.readyState == 4 && request.status == 200) {
+
+            console.log("parsing request data");
             messagesDiv = document.getElementById("messages");
 
             theString = request.responseText;
@@ -23,4 +29,6 @@ function loadMessages() {
             messagesDiv.innerHTML = outputString;
         }
     };
+
+    request.send(null);
 }
