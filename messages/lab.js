@@ -6,7 +6,7 @@ function parse() {
     request = new XMLHttpRequest();
 
     //set up HTTP REQUEST
-    request.open("GET", "data.json", true);
+    request.open("GET", "https://messagehub.herokuapp.com/messages.json", true);
 
     //set up response
     request.onreadystatechange = function() {
@@ -21,11 +21,11 @@ function parse() {
 
             outputString = "";
             for (i = 0; i < 2; i++) {
-                outputString += "<p>" + messages[i]["content"] + "<sub> " + messages[i]["username"] + "</sub></p>";
+                outputString += "<p>" + messages[i].content + "<sub> " + messages[i].username + "</sub></p>";
             }
             messagesDiv.innerHTML = outputString;
         }
     };
 
-    request.send(null);
+    request.send();
 }
