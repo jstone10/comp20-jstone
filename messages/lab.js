@@ -10,7 +10,8 @@ function parse() {
 
     //set up response
     request.onreadystatechange = function() {
-
+        console.log(request.readyState);
+        console.log(request.status);
         if (request.readyState == 4 && request.status == 200) {
 
             messagesDiv = document.getElementById("messages");
@@ -27,5 +28,5 @@ function parse() {
         }
     };
 
-    request.send();
+    request.send(null);
 }
