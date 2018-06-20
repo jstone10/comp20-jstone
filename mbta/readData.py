@@ -1,23 +1,29 @@
+with open("stops.txt", "r") as f:
+	lines = f.readlines()
 
-import json
+fields = [x.replace("\n","") for x in lines[0].split("|")]
+j = []
+for l in lines[2:]:
+	l = l.split("|")
+	d = {}
+	for i in range(0,len(fields)):
+		f = fields[i].replace(" ","")
+		if (f != "stop_name"):
+			x = l[i].replace("\n","").replace(" ","")
+		else:
+			x = l[i].rstrip().replace("\n","")
+		d[f] = x
+	j.append(d)
+order = [' Alewife',' Davis',' Porter Square', ' Harvard Square', ' Central Square', 
+         ' Kendall/MIT', ' Charles/MGH', ' Park Street', ' Downtown Crossing', 
+         ' South Station', ' Broadway', ' Andrew', ' JFK/UMass', ' North Quincy', 
+         ' Wollaston', ' Quincy Center', ' Quincy Adams', ' Braintree', 
+         ' Savin Hill', ' Fields Corner', ' Shawmut', ' Ashmont']
+d = {}
 
-data = open('redstations.txt', 'r')
+for i in range(0, len(order)):
+	d[order[i]] = i
 
-
-labels = data.readline()
-labels = [item.strip() for item in (labels.strip()).split('|')]
-junk = data.readline()
-
-stations = []
-
-for line in data:
-    col = [item.strip() for item in (line.strip()).split('|')]
-    station = {}
-    for i in range(len(labels)):
-        station[labels[i]] = col[i]
-    stations.append(station)
-data.close()
-
-f = open('stations', 'w')
-
-jsonData = json.dump(stations, f)
+x = sorted(j, key=lambda x: d[x["stop_name"]])
+with open("better_format.txt", "w") as f:
+	f.write(str(x))
