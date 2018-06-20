@@ -4,9 +4,20 @@ var path_1 = [getCoordinates(11), getCoordinates(10), getCoordinates(2), getCoor
 
 var path_2 = [getCoordinates(4), getCoordinates(8), getCoordinates(18), getCoordinates(15), getCoordinates(16), getCoordinates(21)];
 
+
+var options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
+};
+
+function locError() {
+    console.warn('browser does not support geo location');
+}
+
+
 // Initialize and add the map
 function initMap() {
-
     var south_station = getCoordinates(0);
 
     var map = new google.maps.Map(
@@ -19,7 +30,21 @@ function initMap() {
             map: map,
             label: 'T'
         });
+        console.log(getCoordinates(i));
     }
+
+    //display user's location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            var userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            var user_marker = new google.maps.Marker({ position: userPos, map: map });
+            map.setCenter(userPos);
+            console.log('success!');
+        }, locError(), options);
+    } else {
+        locError();
+    }
+
 
     //set path
     var redLine_ashmont = new google.maps.Polyline({
@@ -41,6 +66,8 @@ function initMap() {
     });
 }
 
+
+
 function getCoordinates(i) {
-    return { lat: parseFloat(data[i]["stop_lat"]), lng: parseFloat(data[i]["stop_lon"]) };
+    return { lat: parseFloat(data[i].stop_lat), lng: parseFloat(data[i].stop_lon) };
 }
