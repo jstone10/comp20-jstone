@@ -30,10 +30,8 @@ function initMap() {
             var userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
             var user_marker = new google.maps.Marker({ position: userPos, map: map });
             map.setCenter(userPos);
-            console.log('success!');
             user_marker.addListener('click', function() {
                 var closest = getClosestStation(userPos);
-
             });
 
         }, locError(), options);
