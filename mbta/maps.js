@@ -27,9 +27,10 @@ function initMap() {
             if (request.readyState == 4 && request.status == 200) {
                 var data = request.responseText;
                 var station_info = JSON.parse(data);
-                var outboud = sort_direction(station_info, 1);
-                var inbound = sort_direction(station_info, 0);
+                var outbound = find_trains(sort_direction(station_info, 1), 1);
+                var inbound = find_trains(sort_direction(station_info, 0), 0);
 
+                var content = createContent(outbound, inbound, station);
 
             } else if (request.readyState == 4 && request.status != 200) {
                 train_info.setContent("OOPS! something went terribly wrong :(");
@@ -72,30 +73,30 @@ function initMap() {
 
 }
 
-function find_nearest_trains(sched, dir) {
+function find_trains(sched, dir) {
     var now = new Date();
     if (dir == 1) {
-        var train = sched[0];
-        var time = new Date(sched[0].arrival_time);
+        var train = [];
+        j = 0;
         for (i = 0; i < sched.length; i++) {
             var curTime = new Date(sched[i].arrival_time);
-            if (curTime > now && curTime < time) {
-                train = sched[i];
-                time = curTime;
+            if (curTime > now) {
+                train[j] = sched[i];
+                j++;
             }
         }
         return train;
     } else {
-        var train = sched[0];
-        var time = new Date(sched[0].departure_time);
+        var train0 = [];
+        j = 0;
         for (i = 0; i < sched.length; i++) {
-            var curTime = new Date(sched[i].arrival_time);
-            if (curTime > now && curTime < time) {
-                train = sched[i];
-                time = curTime;
+            var curTime0 = new Date(sched[i].departure_time);
+            if (curTime0 > now && curTime0 < time0) {
+                train0[j] = sched[i];
+                j++;
             }
         }
-        return train;
+        return train0;
     }
 }
 
@@ -111,8 +112,13 @@ function sort_direction(sched, direction) {
     return same_direction;
 }
 
+function createContent(inbnd, outbnd, stat) {
+    var content = "<h1>" + stat.stop_name + "</h1>";
+    content += "<h2>Inbound Trains</p>";
+    for (i = 0; i < inbnd.length; i++) {
 
-
+    }
+}
 var data = [{ "stop_lat": "42.395428", "stop_name": "Alewife", "stop_lon": "-71.142483", "stop_id": "place-alfcl" }, { "stop_lat": "42.39674", "stop_name": "Davis", "stop_lon": "-71.121815", "stop_id": "place-davis" }, { "stop_lat": "42.3884", "stop_name": "Porter Square", "stop_lon": "-71.11914899999999", "stop_id": "place-portr" }, { "stop_lat": "42.373362", "stop_name": "Harvard Square", "stop_lon": "-71.118956", "stop_id": "place-harsq" }, { "stop_lat": "42.365486", "stop_name": "Central Square", "stop_lon": "-71.103802", "stop_id": "place-cntsq" }, { "stop_lat": "42.36249079", "stop_name": "Kendall/MIT", "stop_lon": "-71.08617653", "stop_id": "place-knncl" }, { "stop_lat": "42.361166", "stop_name": "Charles/MGH", "stop_lon": "-71.070628", "stop_id": "place-chmnl" }, { "stop_lat": "42.35639457", "stop_name": " Park Street", "stop_lon": "-71.0624242", "stop_id": "place-pktrm" }, { "stop_lat": "42.355518", "stop_name": "Downtown Crossing", "stop_lon": "-71.060225", "stop_id": "place-dwnxg" }, { "stop_lat": "42.352271", "stop_name": "South Station", "stop_lon": "-71.05524200000001", "stop_id": "place-sstat" }, { "stop_lat": "42.342622", "stop_name": "Broadway", "stop_lon": "-71.056967", "stop_id": "place-brdwy" }, { "stop_lat": "42.330154", "stop_name": "Andrew", "stop_lon": "-71.057655", "stop_id": "place-andrw" }, { "stop_lat": "42.320685", "stop_name": "JFK/UMass", "stop_lon": "-71.052391", "stop_id": "place-jfk" }, { "stop_lat": "42.275275", "stop_name": "North Quincy", "stop_lon": "-71.029583", "stop_id": "place-nqncy" }, { "stop_lat": "42.2665139", "stop_name": "Wollaston", "stop_lon": "-71.0203369", "stop_id": "place-wlsta" }, { "stop_lat": "42.251809", "stop_name": "Quincy Center", "stop_lon": "-71.005409", "stop_id": "place-qnctr" }, { "stop_lat": "42.233391", "stop_name": "Quincy Adams", "stop_lon": "-71.007153", "stop_id": "place-qamnl" }, { "stop_lat": "42.2078543", "stop_name": "Braintree", "stop_lon": "-71.0011385", "stop_id": "place-brntn" }, { "stop_lat": "42.31129", "stop_name": "Savin Hill", "stop_lon": "-71.053331", "stop_id": "place-shmnl" }, { "stop_lat": "42.300093", "stop_name": "Fields Corner", "stop_lon": "-71.061667", "stop_id": "place-fldcr" }, { "stop_lat": "42.29312583", "stop_name": "Shawmut", "stop_lon": "-71.06573796000001", "stop_id": "place-smmnl" }, { "stop_lat": "42.284652", "stop_name": "Ashmont", "stop_lon": "-71.06448899999999", "stop_id": "place-asmnl" }];
 
 var options = {
