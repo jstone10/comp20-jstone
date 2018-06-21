@@ -3,6 +3,9 @@ function initMap() {
     var map = new google.maps.Map(
         document.getElementById('map'), { zoom: 12, center: { lat: 42.3601, lng: -71.0589 } });
 
+
+    var train_info = new google.maps.InfoWindow();
+
     //display user's location
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(pos) {
@@ -10,21 +13,25 @@ function initMap() {
             var user_marker = new google.maps.Marker({ position: userPos, map: map });
             map.setCenter(userPos);
             var closest = getClosestStation(userPos);
-
         }, locError(), options);
     } else {
         locError();
     }
 
+
     function showStationInfo(station) {
         var request = new XMLHttpRequest();
-
         var trains = "https://defense-in-derpth.herokuapp.com/redline/schedule.json?stop_id=" + station.stop_id;
-
         request.open("GET", trains, true);
+        request.onreadystatechange = function() {
+            if (request.readyState == 4 && request.status == 200) {
 
-
-
+            } else if (request.readyState == 4 && request.status != 200) {
+                train_info.setContent("OOPS! something went terribly wrong :(");
+            } else {
+                train_info.setContent("loading content...");
+            }
+        };
     }
 
 
