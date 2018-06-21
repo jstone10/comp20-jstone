@@ -1,3 +1,5 @@
+//Josh Stone
+
 // Initialize and add the map
 function initMap() {
     var map = new google.maps.Map(
@@ -10,13 +12,11 @@ function initMap() {
     //display user's location
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(pos) {
-            console.log("searching for location...");
             userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
             var user_marker = new google.maps.Marker({ position: userPos, map: map });
             map.setCenter(userPos);
             var closest = getClosestStation(userPos);
             user_marker.addListener('click', function() {
-                console.log("you clicked the marker");
                 train_info.open(map, user_marker);
                 showStationInfo(closest);
             });
@@ -31,7 +31,6 @@ function initMap() {
         request.onreadystatechange = function() {
             if (request.readyState == 4 && request.status == 200) {
                 var data = request.responseText;
-                console.log(data);
                 var station_info = JSON.parse(data);
                 var outbound = find_trains(sort_direction(station_info, 1), 1);
                 var inbound = find_trains(sort_direction(station_info, 0), 0);
