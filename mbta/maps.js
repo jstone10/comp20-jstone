@@ -5,39 +5,45 @@ function initMap() {
 
 
     var train_info = new google.maps.InfoWindow();
+    train_info.setContent("loading something...");
 
     //display user's location
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(pos) {
+            console.log("searching for location...");
             userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
             var user_marker = new google.maps.Marker({ position: userPos, map: map });
             map.setCenter(userPos);
             var closest = getClosestStation(userPos);
+            user_marker.addListener('click', function() {
+                console.log("you clicked the marker");
+                train_info.open(map, user_marker);
+                showStationInfo(closest);
+            });
         }, locError(), options);
-    } else {
-        locError();
     }
 
+    var request = new XMLHttpRequest();
 
     function showStationInfo(station) {
-        var request = new XMLHttpRequest();
         var trains = "https://defense-in-derpth.herokuapp.com/redline/schedule.json?stop_id=" + station.stop_id;
         request.open("GET", trains, true);
         request.onreadystatechange = function() {
             if (request.readyState == 4 && request.status == 200) {
                 var data = request.responseText;
+                console.log(data);
                 var station_info = JSON.parse(data);
                 var outbound = find_trains(sort_direction(station_info, 1), 1);
                 var inbound = find_trains(sort_direction(station_info, 0), 0);
-
                 var content = createContent(outbound, inbound, station);
-
+                train_info.setContent(content);
             } else if (request.readyState == 4 && request.status != 200) {
                 train_info.setContent("OOPS! something went terribly wrong :(");
             } else {
                 train_info.setContent("loading content...");
             }
         };
+        request.send(null);
     }
 
 
@@ -114,10 +120,17 @@ function sort_direction(sched, direction) {
 
 function createContent(inbnd, outbnd, stat) {
     var content = "<h1>" + stat.stop_name + "</h1>";
-    content += "<h2>Inbound Trains</p>";
+    content += "<h2>Inbound Trains</h2>";
     for (i = 0; i < inbnd.length; i++) {
-
+        time = new Date(inbd[i].departure_time);
+        content += "<p>" + time.toLocaleTimeString() + "</p>";
     }
+    content += "<h2>OutBound Trains</h2>";
+    for (i = 0; i < outbnd.length; i++) {
+        time = new Date(outbnd.arrival_time);
+        content += "<p>" + time.toLocaleTimeString() + "</p>";
+    }
+    return content;
 }
 var data = [{ "stop_lat": "42.395428", "stop_name": "Alewife", "stop_lon": "-71.142483", "stop_id": "place-alfcl" }, { "stop_lat": "42.39674", "stop_name": "Davis", "stop_lon": "-71.121815", "stop_id": "place-davis" }, { "stop_lat": "42.3884", "stop_name": "Porter Square", "stop_lon": "-71.11914899999999", "stop_id": "place-portr" }, { "stop_lat": "42.373362", "stop_name": "Harvard Square", "stop_lon": "-71.118956", "stop_id": "place-harsq" }, { "stop_lat": "42.365486", "stop_name": "Central Square", "stop_lon": "-71.103802", "stop_id": "place-cntsq" }, { "stop_lat": "42.36249079", "stop_name": "Kendall/MIT", "stop_lon": "-71.08617653", "stop_id": "place-knncl" }, { "stop_lat": "42.361166", "stop_name": "Charles/MGH", "stop_lon": "-71.070628", "stop_id": "place-chmnl" }, { "stop_lat": "42.35639457", "stop_name": " Park Street", "stop_lon": "-71.0624242", "stop_id": "place-pktrm" }, { "stop_lat": "42.355518", "stop_name": "Downtown Crossing", "stop_lon": "-71.060225", "stop_id": "place-dwnxg" }, { "stop_lat": "42.352271", "stop_name": "South Station", "stop_lon": "-71.05524200000001", "stop_id": "place-sstat" }, { "stop_lat": "42.342622", "stop_name": "Broadway", "stop_lon": "-71.056967", "stop_id": "place-brdwy" }, { "stop_lat": "42.330154", "stop_name": "Andrew", "stop_lon": "-71.057655", "stop_id": "place-andrw" }, { "stop_lat": "42.320685", "stop_name": "JFK/UMass", "stop_lon": "-71.052391", "stop_id": "place-jfk" }, { "stop_lat": "42.275275", "stop_name": "North Quincy", "stop_lon": "-71.029583", "stop_id": "place-nqncy" }, { "stop_lat": "42.2665139", "stop_name": "Wollaston", "stop_lon": "-71.0203369", "stop_id": "place-wlsta" }, { "stop_lat": "42.251809", "stop_name": "Quincy Center", "stop_lon": "-71.005409", "stop_id": "place-qnctr" }, { "stop_lat": "42.233391", "stop_name": "Quincy Adams", "stop_lon": "-71.007153", "stop_id": "place-qamnl" }, { "stop_lat": "42.2078543", "stop_name": "Braintree", "stop_lon": "-71.0011385", "stop_id": "place-brntn" }, { "stop_lat": "42.31129", "stop_name": "Savin Hill", "stop_lon": "-71.053331", "stop_id": "place-shmnl" }, { "stop_lat": "42.300093", "stop_name": "Fields Corner", "stop_lon": "-71.061667", "stop_id": "place-fldcr" }, { "stop_lat": "42.29312583", "stop_name": "Shawmut", "stop_lon": "-71.06573796000001", "stop_id": "place-smmnl" }, { "stop_lat": "42.284652", "stop_name": "Ashmont", "stop_lon": "-71.06448899999999", "stop_id": "place-asmnl" }];
 
