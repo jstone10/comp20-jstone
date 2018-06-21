@@ -25,6 +25,11 @@ function initMap() {
         request.open("GET", trains, true);
         request.onreadystatechange = function() {
             if (request.readyState == 4 && request.status == 200) {
+                var data = request.responseText;
+                var station_info = JSON.parse(data);
+                var outboud = sort_direction(station_info, 1);
+                var inbound = sort_direction(station_info, 0);
+
 
             } else if (request.readyState == 4 && request.status != 200) {
                 train_info.setContent("OOPS! something went terribly wrong :(");
@@ -67,10 +72,30 @@ function initMap() {
 
 }
 
-function find_nearest_trains(schedule) {
+function find_nearest_trains(sched, dir) {
     var now = new Date();
-    for (i = 0; i < schedule.length; i++) {
-
+    if (dir == 1) {
+        var train = sched[0];
+        var time = new Date(sched[0].arrival_time);
+        for (i = 0; i < sched.length; i++) {
+            var curTime = new Date(sched[i].arrival_time);
+            if (curTime > now && curTime < time) {
+                train = sched[i];
+                time = curTime;
+            }
+        }
+        return train;
+    } else {
+        var train = sched[0];
+        var time = new Date(sched[0].departure_time);
+        for (i = 0; i < sched.length; i++) {
+            var curTime = new Date(sched[i].arrival_time);
+            if (curTime > now && curTime < time) {
+                train = sched[i];
+                time = curTime;
+            }
+        }
+        return train;
     }
 }
 
@@ -85,9 +110,6 @@ function sort_direction(sched, direction) {
     }
     return same_direction;
 }
-
-
-var info = [{ "attributes": { "arrival_time": "2018-05-24T23:02:22-04:00", "departure_time": "2018-05-24T23:02:22-04:00", "direction_id": 0, "schedule_relationship": null, "status": null, "stop_sequence": 10, "track": null }, "id": "prediction-36491863-L-70063-10", "relationships": { "route": { "data": { "id": "Red", "type": "route" } }, "stop": { "data": { "id": "70063", "type": "stop" } }, "trip": { "data": { "id": "36491863-L", "type": "trip" } } }, "type": "prediction" }, { "attributes": { "arrival_time": "2018-05-24T23:02:22-04:00", "departure_time": "2018-05-24T23:02:22-04:00", "direction_id": 1, "schedule_relationship": null, "status": null, "stop_sequence": 210, "track": null }, "id": "prediction-36491868-L-70064-210", "relationships": { "route": { "data": { "id": "Red", "type": "route" } }, "stop": { "data": { "id": "70064", "type": "stop" } }, "trip": { "data": { "id": "36491868-L", "type": "trip" } } }, "type": "prediction" }, { "attributes": { "arrival_time": "2018-05-24T23:08:36-04:00", "departure_time": "2018-05-24T23:08:36-04:00", "direction_id": 1, "schedule_relationship": null, "status": null, "stop_sequence": 210, "track": null }, "id": "prediction-36491822-L-70064-210", "relationships": { "route": { "data": { "id": "Red", "type": "route" } }, "stop": { "data": { "id": "70064", "type": "stop" } }, "trip": { "data": { "id": "36491822-L", "type": "trip" } } }, "type": "prediction" }, { "attributes": { "arrival_time": "2018-05-24T23:12:40-04:00", "departure_time": "2018-05-24T23:12:40-04:00", "direction_id": 0, "schedule_relationship": null, "status": null, "stop_sequence": 10, "track": null }, "id": "prediction-36491784-L-70063-10", "relationships": { "route": { "data": { "id": "Red", "type": "route" } }, "stop": { "data": { "id": "70063", "type": "stop" } }, "trip": { "data": { "id": "36491784-L", "type": "trip" } } }, "type": "prediction" }, { "attributes": { "arrival_time": "2018-05-24T23:14:18-04:00", "departure_time": "2018-05-24T23:14:18-04:00", "direction_id": 1, "schedule_relationship": null, "status": null, "stop_sequence": 210, "track": null }, "id": "prediction-36491818-L-70064-210", "relationships": { "route": { "data": { "id": "Red", "type": "route" } }, "stop": { "data": { "id": "70064", "type": "stop" } }, "trip": { "data": { "id": "36491818-L", "type": "trip" } } }, "type": "prediction" }, { "attributes": { "arrival_time": "2018-05-24T23:16:40-04:00", "departure_time": "2018-05-24T23:16:40-04:00", "direction_id": 0, "schedule_relationship": null, "status": null, "stop_sequence": 10, "track": null }, "id": "prediction-36491867-L-70063-10", "relationships": { "route": { "data": { "id": "Red", "type": "route" } }, "stop": { "data": { "id": "70063", "type": "stop" } }, "trip": { "data": { "id": "36491867-L", "type": "trip" } } }, "type": "prediction" }, { "attributes": { "arrival_time": "2018-05-24T23:20:30-04:00", "departure_time": "2018-05-24T23:20:30-04:00", "direction_id": 1, "schedule_relationship": null, "status": null, "stop_sequence": 210, "track": null }, "id": "prediction-36491829-L-70064-210", "relationships": { "route": { "data": { "id": "Red", "type": "route" } }, "stop": { "data": { "id": "70064", "type": "stop" } }, "trip": { "data": { "id": "36491829-L", "type": "trip" } } }, "type": "prediction" }, { "attributes": { "arrival_time": "2018-05-24T23:22:54-04:00", "departure_time": "2018-05-24T23:22:54-04:00", "direction_id": 0, "schedule_relationship": null, "status": null, "stop_sequence": 10, "track": null }, "id": "prediction-36491821-L-70063-10", "relationships": { "route": { "data": { "id": "Red", "type": "route" } }, "stop": { "data": { "id": "70063", "type": "stop" } }, "trip": { "data": { "id": "36491821-L", "type": "trip" } } }, "type": "prediction" }, { "attributes": { "arrival_time": "2018-05-24T23:23:18-04:00", "departure_time": "2018-05-24T23:23:18-04:00", "direction_id": 1, "schedule_relationship": null, "status": null, "stop_sequence": 210, "track": null }, "id": "prediction-36491815-L-70064-210", "relationships": { "route": { "data": { "id": "Red", "type": "route" } }, "stop": { "data": { "id": "70064", "type": "stop" } }, "trip": { "data": { "id": "36491815-L", "type": "trip" } } }, "type": "prediction" }, { "attributes": { "arrival_time": "2018-05-24T23:28:36-04:00", "departure_time": "2018-05-24T23:28:36-04:00", "direction_id": 0, "schedule_relationship": null, "status": null, "stop_sequence": 10, "track": null }, "id": "prediction-36491811-L-70063-10", "relationships": { "route": { "data": { "id": "Red", "type": "route" } }, "stop": { "data": { "id": "70063", "type": "stop" } }, "trip": { "data": { "id": "36491811-L", "type": "trip" } } }, "type": "prediction" }];
 
 
 
