@@ -27,15 +27,15 @@ function initMap() {
     var request = new XMLHttpRequest();
 
     function showStationInfo(station) {
-        var trains = "https://defense-in-derpth.herokuapp.com/redline/schedule.json?stop_id=" + station.stop_id;
+        var trains = "https://quiet-spire-80190.herokuapp.com/redline/schedule.json?stop_id=" + station.stop_id;
         request.open("GET", trains, true);
         request.onreadystatechange = function() {
             if (request.readyState == 4 && request.status == 200) {
                 var data = request.responseText;
-                var station_info = JSON.parse(data);
+                var station_info = JSON.parse(data).data;
                 var outbound = find_trains(sort_direction(station_info, 1), 1);
                 var inbound = find_trains(sort_direction(station_info, 0), 0);
-                var content = createContent(outbound, inbound, station);
+                var content = createContent(inbound, outbound, station);
                 train_info.setContent(content);
             } else if (request.readyState == 4 && request.status != 200) {
                 train_info.setContent("OOPS! something went terribly wrong :(");
@@ -52,7 +52,7 @@ function initMap() {
         var user_nearest_station = new google.maps.Polyline({
             path: path,
             geodesic: true,
-            strokeColor: '#33FFFC',
+            strokeColor: '#FF0000',
             strokeOpacity: 1.0,
             strokeWeight: 2,
             map: map
@@ -110,7 +110,7 @@ function find_trains(sched, dir) {
         j = 0;
         for (i = 0; i < sched.length; i++) {
             var curTime0 = new Date(sched[i].departure_time);
-            if (curTime0 > now && curTime0 < time0) {
+            if (curTime0 > now) {
                 train0[j] = sched[i];
                 j++;
             }
@@ -125,6 +125,7 @@ function sort_direction(sched, direction) {
     var j = 0;
     for (i = 0; i < sched.length; i++) {
         if (sched[i].attributes.direction_id == direction) {
+
             same_direction[j] = sched[i].attributes;
             j++;
         }
@@ -137,12 +138,12 @@ function createContent(inbnd, outbnd, stat) {
     var content = "<h1>" + stat.stop_name + "</h1>";
     content += "<h2>Inbound Trains</h2>";
     for (i = 0; i < inbnd.length; i++) {
-        time = new Date(inbd[i].departure_time);
+        time = new Date(inbnd[i].departure_time);
         content += "<p>" + time.toLocaleTimeString() + "</p>";
     }
     content += "<h2>OutBound Trains</h2>";
     for (i = 0; i < outbnd.length; i++) {
-        time = new Date(outbnd.arrival_time);
+        time = new Date(outbnd[i].arrival_time);
         content += "<p>" + time.toLocaleTimeString() + "</p>";
     }
     return content;
