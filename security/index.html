@@ -38,7 +38,10 @@
                      .replace(/&lt/g, "&lt;")
                      .replace(/&gt/g, "&gt;")
                      .replace(/"/g, "&quot;")
-                     .replace(/'/g, "&#039;");
+                     .replace(/'/g, "&#039;")
+                     .replace(/}/g, "&#125;")
+                     .replace(/{/g, "&#123;")
+                     .replace(/$/g, "&#36;")
                 }
             </code> source: <a href="https://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript">
                 https://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript</a>. This function should be used to cleanse any user input. It can be used like this: <code>var login = esapeHtml(request.body.login);</code>
@@ -49,13 +52,28 @@
         </li>
         <ul>
             <li>Located on GET API /checkins.json route</li>
-            <li><strong>MEDIUM</strong> - lets users see all information in the collection used by the web application</li>
+            <li><strong>MEDIUM</strong> - lets users see all information in the collection, used by the web application</li>
             <li>
-
+                This route uses a query string to allow users to look up all checkins for a specific login. However, using the query string "login[$gt]=" along with numbers for the lat and lng queries. The Server will respnd with all of documents in the collection.
+            </li>
+            <img src="./injection.png" hieght="200" width="1000">
+            <li>
+                if <code>request.query.login</code> is converted into a string and esapeHtml is called on it like this <code>escapeHtml(String(request.query.login));</code> the server will respond with [] unless gt is a valid login.
             </li>
         </ul>
+        <li>
+            <h3>Insecure Code</h3>
+            <ul>
+                <li>Located on GET API /sendLocation</li>
+                <li><strong>MEDIUM</strong> - shows all information in collection used by curl. allows users to continually </li>
+                <li>ThWhen the user submits any login latitude and longitude the server adds it to the collection and responds with an array of all of the documents in the collection. This is because the code calls the <code>.find()</code> without any parameters.</li>
+                <img src="bad.png" width="1000">
+                <li>To fix this they could remove the route entirely as it does the same function as the submite route but contains security issues</li>
+            </ul>
+        </li>
     </ol>
-
+    <h2>Conclusion</h2>
+    <p></p>
 </body>
 
 </html>
