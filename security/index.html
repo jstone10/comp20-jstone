@@ -16,7 +16,7 @@
     <p>I first carried out Black Box(before I read the code) testing on both a local build of the application as well as the online application. Then I preformed white box(after reading the code) testing. I was able to find several vulnerabilites using both
         a browser and <code>curl</code>.</p>
     <h2>Abstract of Findings</h2>
-    <p>Most of the security issues arise from overly trusting user input. Fortunately, these flaws can be remedies with only a few changes to the existing code.</p>
+    <p>Most of the security issues arise from overly trusting user input. The app allows any user to submit a login latitude and longitude. Fortunately, some of these flaws can be remedies with only a few changes to the existing code.</p>
     <h2>Issues Found</h2>
     <ol>
         <li>
@@ -73,7 +73,8 @@
         </li>
     </ol>
     <h2>Conclusion</h2>
-    <p></p>
+    <p>jordan-marsh's vulnerabilities allow hackers to affect both client and serverside resources. Although these code changes I suggested are easy to implement, you might consider restructuring site to validate who is inputing data. I could implement these
+        changes for about $20.</p>
 </body>
 
 </html>
